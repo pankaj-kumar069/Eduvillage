@@ -5,7 +5,7 @@ const mysql = require("mysql2");
 const { Pool } = require("pg");
 
 const app = express();
-const PORT = 5432;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors({
   origin: "*"
@@ -481,5 +481,5 @@ app.get("/leaderboard/:courseId", (req, res) => {
 
 /* ================= START SERVER ================= */
 app.listen(PORT, () => {
-    console.log(`🚀 Server running at http://localhost:${PORT}`);
+    console.log(`🚀 Server running at ${PORT}`);
 });
