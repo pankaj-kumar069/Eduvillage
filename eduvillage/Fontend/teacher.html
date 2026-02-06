@@ -98,7 +98,7 @@ async function addCourse() {
 
     if (!name) return alert("Enter course name");
 
-    const res = await fetch("http://localhost:3000/course/add", {
+    const res = await fetch("https://eduvillage.onrender.com/course/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ course_name: name, teacher_id: teacherId })
@@ -115,7 +115,7 @@ async function loadNotesCourses() {
 
     dropdown.innerHTML = '<option value="">Select Course</option>';
 
-    const res = await fetch(`http://localhost:3000/courses/teacher/${teacherId}`);
+    const res = await fetch(`https://eduvillage.onrender.com/courses/teacher/${teacherId}`);
     const data = await res.json();
 
     if (data.success) {
@@ -136,7 +136,7 @@ async function saveNotes() {
 
     if (!courseId || !content) return alert("Fill all fields");
 
-    const res = await fetch("http://localhost:3000/notes", {
+    const res = await fetch("https://eduvillage.onrender.com/notes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ teacher_id: teacherId, course_id: courseId, content })
@@ -154,7 +154,7 @@ async function loadStudentCourseDropdown() {
 
     dropdown.innerHTML = '<option value="">Select Course</option>';
 
-    const res = await fetch(`http://localhost:3000/courses/teacher/${teacherId}`);
+    const res = await fetch(`https://eduvillage.onrender.com/courses/teacher/${teacherId}`);
     const data = await res.json();
 
     if (data.success) {
@@ -175,7 +175,7 @@ async function loadStudentsByCourse() {
     ul.innerHTML = "<li>Loading students...</li>";
     if (!courseId) return ul.innerHTML = "<li>Select a course</li>";
 
-    const res = await fetch(`http://localhost:3000/teacher/students/${courseId}`);
+    const res = await fetch(`https://eduvillage.onrender.com/teacher/students/${courseId}`);
     const data = await res.json();
 
     ul.innerHTML = "";
@@ -198,7 +198,7 @@ async function openLeaderboard() {
     ul.innerHTML = "<li>Loading leaderboard...</li>";
 
     // get teacher course
-    const resCourse = await fetch(`http://localhost:3000/courses/teacher/${teacherId}`);
+    const resCourse = await fetch(`https://eduvillage.onrender.com/courses/teacher/${teacherId}`);
     const dataCourse = await resCourse.json();
 
     if (!dataCourse.success || dataCourse.courses.length === 0) {
@@ -209,7 +209,7 @@ async function openLeaderboard() {
     const courseId = dataCourse.courses[0].id;
 
     // get leaderboard
-    const res = await fetch(`http://localhost:3000/leaderboard/${courseId}`);
+    const res = await fetch(`https://eduvillage.onrender.com/leaderboard/${courseId}`);
     const data = await res.json();
 
     ul.innerHTML = "";

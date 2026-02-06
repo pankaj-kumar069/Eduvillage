@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const mysql = require("mysql2");
+const { Pool } = require("pg");
 
 const app = express();
 const PORT = 5432;
@@ -10,11 +11,9 @@ app.use(cors());
 app.use(express.json());
 
 /* ================= DATABASE ================= */
-const db = mysql.createConnection({
-    host: "dpg-d632ff1r0fns73dgeslg-a",
-    user: "dbs_n8oi_user",
-    password: "AUneQgBu8fHZm3Qi8KBqEsmMXMbCcrrK",
-    database: "dbs_n8oi"
+const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
 });
 
 db.connect(err => {

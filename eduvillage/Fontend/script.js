@@ -46,7 +46,7 @@ async function studentLogin() {
     const email = document.getElementById("sEmail").value;
     const password = document.getElementById("sPass").value;
 
-    const res = await fetch("http://localhost:3000/student/login", {
+    const res = await fetch("https://eduvillage.onrender.com/student/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
@@ -75,7 +75,7 @@ async function teacherLogin() {
         const password = document.getElementById("tPass")?.value;
         if (!email || !password) return alert("Enter credentials");
 
-        const res = await fetch("http://localhost:3000/teacher/login", {
+        const res = await fetch("https://eduvillage.onrender.com/teacher/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password })
@@ -108,7 +108,7 @@ async function registerStudent() {
             field: document.getElementById("sField")?.value
         };
 
-        const res = await fetch("http://localhost:3000/student/register", {
+        const res = await fetch("https://eduvillage.onrender.com/student/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
@@ -132,7 +132,7 @@ async function registerTeacher() {
             subject: document.getElementById("tSubject")?.value
         };
 
-        const res = await fetch("http://localhost:3000/teacher/register", {
+        const res = await fetch("https://eduvillage.onrender.com/teacher/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body)
@@ -172,7 +172,7 @@ async function loadNotesForStudent() {
 
     if (!email) return;
 
-    const res = await fetch(`http://localhost:3000/notes/student/${email}`);
+    const res = await fetch(`https://eduvillage.onrender.com/notes/student/${email}`);
     const data = await res.json();
 
     if (!data.success || data.notes.length === 0) {
@@ -207,7 +207,7 @@ async function loadAssignments() {
     }
 
     const res = await fetch(
-        `http://localhost:3000/assignments/student/${email}`
+        `https://eduvillage.onrender.com/assignments/student/${email}`
     );
 
     const data = await res.json();
