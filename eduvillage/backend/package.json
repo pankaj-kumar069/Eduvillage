@@ -1,0 +1,31 @@
+{
+  "name": "fsd114-raginigholap",
+  "version": "1.0.0",
+  "description": "<p align=\"center\">\r   <img src=\"https://internship.civoranexus.com/CivoraX.png\" alt=\"CivoraX Logo\" width=\"200\"/>\r </p>",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/civoranexus/FSD114-RaginiGholap.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/civoranexus/FSD114-RaginiGholap/issues"
+  },
+  "homepage": "https://github.com/civoranexus/FSD114-RaginiGholap#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "body-parser": "^2.2.2",
+    "cors": "^2.8.5",
+    "express": "^4.22.1",
+    "mysql2": "^3.16.3"
+  }
+}

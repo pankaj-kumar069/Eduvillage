@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduVillage | Login/Register</title>
+<style>
+body{
+    font-family: Arial, sans-serif;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+    margin:0;
+    background: linear-gradient(135deg, #6e45e2, #88d3ce);
+}
+.container, .register-container, .password-container{
+    background: linear-gradient(135deg,hsl(193,18%,85%),hsl(192,59%,69%));
+    padding:30px;
+    border-radius:8px;
+    width:320px;
+    box-shadow:5px 5px 15px black;
+    position:absolute;
+}
+h1,h2,h3{text-align:center;}
+input{
+    width:100%;
+    padding:10px;
+    margin:6px 0;
+    background:#baa9c5;
+    border-radius:5px;
+    border:1px solid #383838;
+}
+button{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    background:#755dca;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+button:hover{background:#2a165f;color:white;}
+.login-form{display:none;}
+.login-form.active{display:block;}
+.tabs{display:flex;justify-content:space-around;margin-bottom:15px;}
+.tab{padding:8px 15px;background:#755dca;border-radius:5px;cursor:pointer;}
+.tab.active{background:#472e9f;color:white;}
+.form-container{display:none;}
+.form-container.active{display:block;}
+.back-btn,.signup-btn,.password-btn{
+    background:none;
+    border:none;
+    margin-top:10px;
+    cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="container" id="login-container">
+<h1>EduVillage</h1>
+<h2>Login</h2>
+<button onclick="showLoginForm('student')">Student Login</button>
+<button onclick="showLoginForm('teacher')">Teacher Login</button>
+
+<div id="student-form" class="login-form">
+<h3>Student Login</h3>
+<input id="sEmail" type="text" placeholder="Email">
+<input id="sPass" type="password" placeholder="Password">
+<button type="button" onclick="togglePassword('sPass')">Show</button>
+<button type="button" onclick="studentLogin()">Login</button>
+</div>
+
+<div id="teacher-form" class="login-form">
+<h3>Teacher Login</h3>
+<input id="tEmail" type="text" placeholder="Email">
+<input id="tPass" type="password" placeholder="Password">
+<button type="button" onclick="togglePassword('tPass')">Show</button>
+<button type="button" onclick="teacherLogin()">Login</button>
+</div>
+
+<button class="signup-btn" onclick="showRegisterPage()">Create Account</button>
+</div>
+
+<!-- REGISTER -->
+<div class="register-container" id="register-container" style="display:none">
+<h1>EduVillage</h1>
+<h2>Register</h2>
+<div class="tabs">
+<div class="tab active" data-tab="teacher">Teacher</div>
+<div class="tab" data-tab="student">Student</div>
+</div>
+
+<div class="form-container active" id="teacher">
+<input id="tName" type="text" placeholder="Full Name">
+<input id="tRegEmail" type="email" placeholder="Email">
+<input id="tRegPass" type="password" placeholder="Password">
+<button type="button" onclick="togglePassword('tRegPass')">Show</button>
+<input id="tSubject" type="text" placeholder="Subject Expertise">
+<button type="button" onclick="registerTeacher()">Register</button>
+</div>
+
+<div class="form-container" id="student">
+<input id="sName" type="text" placeholder="Full Name">
+<input id="sRegEmail" type="email" placeholder="Email">
+<input id="sRegPass" type="password" placeholder="Password">
+<button type="button" onclick="togglePassword('sRegPass')">Show</button>
+<input id="sEducation" type="text" placeholder="Education Level">
+<input id="sField" type="text" placeholder="Field of Study">
+<button type="button" onclick="registerStudent()">Register</button>
+</div>
+
+<button class="back-btn" onclick="showLoginPage()">Back</button>
+</div>
+
+<script src="./script.js"></script>
+
+</body>
+</html>

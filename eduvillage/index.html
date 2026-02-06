@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduVillage | Online Learning Platform</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #6e45e2, #88d3ce);
+            color: #1f1f1f;
+        }
+
+        nav {
+            background-color: #472e9f;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+
+        nav h2 {
+            margin: 0;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #755dca, #88d3ce);
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+            border-radius: 0 0 50% 50% / 10%;
+        }
+
+        .hero h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+            font-family: "Lucida Handwriting";
+        }
+
+        .hero p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+
+        .hero button {
+            padding: 12px 20px;
+            font-size: 16px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #755dca;
+            color: black;
+        }
+
+        .btn-primary:hover {
+            background-color: #2a165f;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #baa9c5;
+            color: black;
+        }
+
+        .btn-secondary:hover {
+            background-color: #755dca;
+            color: white;
+        }
+
+        .section {
+            padding: 50px 20px;
+            text-align: center;
+        }
+
+        .features {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #baa9c5, #88d3ce);
+            padding: 20px;
+            width: 250px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        footer {
+            background-color: #472e9f;
+            color: white;
+            text-align: center;
+            padding: 15px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+<nav>
+    <h2>EduVillage</h2>
+    <div>
+        <a href="index.html">Home</a>
+        <a href="#">About</a>
+        <a href="login_register.html">Login</a>
+        <a href="login_register.html">Register</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <h1>Learn Anytime, Anywhere</h1>
+    <p>Welcome to EduVillage – Your Online Learning Partner</p>
+    <button class="btn-primary" onclick="goToLogin()">Get Started</button>
+    <button class="btn-secondary" onclick="goToLogin()">Login</button>
+</div>
+
+<div class="section">
+    <h2>About EduVillage</h2>
+    <p>
+        EduVillage is an online learning platform that connects students with expert teachers.
+    </p>
+</div>
+
+<div class="section">
+    <h2>Platform Features</h2>
+    <div class="features">
+        <div class="card"><h3>Expert Teachers</h3></div>
+        <div class="card"><h3>Quality Courses</h3></div>
+        <div class="card"><h3>Quizzes & Tests</h3></div>
+        <div class="card"><h3>Progress Tracking</h3></div>
+    </div>
+</div>
+
+<div class="section">
+    <h2>Who Can Use EduVillage?</h2>
+    <div class="features">
+        <div class="card"><h3>Students</h3></div>
+        <div class="card"><h3>Teachers</h3></div>
+    </div>
+</div>
+
+<footer>
+    © 2026 EduVillage | Online Learning Platform
+</footer>
+
+<!-- PHASE 3 CONNECTION -->
+<script src="script.js"></script>
+<script>
+    // Go to combined login/registration page
+    function goToLogin() {
+        window.location.href = "login_register.html";
+    }
+</script>
+</body>
+</html>

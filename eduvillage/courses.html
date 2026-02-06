@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EduVillage | Courses</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body{
+            background: linear-gradient(135deg, #6e45e2, #88d3ce);
+            padding:30px;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:25px;
+            color:#1f1f1f;
+            font-family: "Lucida Handwriting";
+        }
+
+        .course-container{
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+            gap:20px;
+        }
+
+        .course-card{
+            background: linear-gradient(135deg, #baa9c5, #88d3ce);
+            padding:20px;
+            border-radius:12px;
+            box-shadow:0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .course-card:hover{
+            transform: translateY(-5px);
+            box-shadow:0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .course-card h3{
+            color:#2a165f;
+            margin-bottom:10px;
+        }
+
+        .course-card p{
+            font-size:14px;
+            margin-bottom:10px;
+        }
+
+        .course-card button{
+            padding:8px 12px;
+            border:none;
+            background:#755dca;
+            color:black;
+            border-radius:5px;
+            cursor:pointer;
+        }
+
+        .course-card button:hover{
+            background:#2a165f;
+            color:white;
+        }
+
+        .back-btn{
+            display:inline-block;
+            margin-bottom:20px;
+            color:#472e9f;
+            text-decoration:none;
+            font-weight:bold;
+        }
+    </style>
+</head>
+<body>
+
+<a href="student.html" class="back-btn">← Back to Dashboard</a>
+
+<h1>Available Courses</h1>
+
+<div class="course-container" id="courseContainer">
+    <!-- Courses load here -->
+</div>
+
+<script>
+/* ---------- LOGIN CHECK ---------- */
+const studentName = localStorage.getItem("studentName");
+if (!studentName) {
+    alert("Please login first");
+    window.location.href = "index.html";
+}
+
+/* ---------- COURSE DATA ---------- */
+const courses = [
+    { id: 1, title: "Web Development", desc: "HTML, CSS, JavaScript fundamentals" },
+    { id: 2, title: "Data Structures", desc: "Stacks, queues, trees, graphs" },
+    { id: 3, title: "Python Programming", desc: "Python basics to advanced" },
+    { id: 4, title: "Database Management", desc: "SQL, normalization, DB design" }
+];
+
+/* ---------- LOAD COURSES ---------- */
+function loadCourses() {
+    const container = document.getElementById("courseContainer");
+    container.innerHTML = "";
+
+    courses.forEach(course => {
+        const div = document.createElement("div");
+        div.className = "course-card";
+        div.innerHTML = `
+            <h3>${course.title}</h3>
+            <p>${course.desc}</p>
+            <button onclick="enrollCourse('${course.title}')">Enroll</button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+/* ---------- ENROLL ---------- */
+function enrollCourse(courseName) {
+    let enrolled = JSON.parse(localStorage.getItem("enrolledCourses")) || [];
+
+    if (enrolled.includes(courseName)) {
+        alert("Already enrolled in this course");
+        return;
+    }
+
+    enrolled.push(courseName);
+    localStorage.setItem("enrolledCourses", JSON.stringify(enrolled));
+
+    alert(`Enrolled successfully in ${courseName}`);
+}
+
+loadCourses();
+</script>
+
+</body>
+</html>
