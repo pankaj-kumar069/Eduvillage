@@ -7,7 +7,10 @@ const { Pool } = require("pg");
 const app = express();
 const PORT = 5432;
 
-app.use(cors());
+app.use(cors({
+  origin: "*"
+}));
+
 app.use(express.json());
 
 /* ================= DATABASE ================= */
