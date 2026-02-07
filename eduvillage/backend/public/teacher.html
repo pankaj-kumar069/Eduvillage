@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>EduVillage | Teacher Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            display: flex;
+            height: 100vh;
+            background: linear-gradient(135deg, #6e45e2, #88d3ce);
+        }
+
+        .sidebar {
+            width: 240px;
+            background: #472e9f;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-family: "Lucida Handwriting";
+        }
+
+        .sidebar button {
+            width: 100%;
+            padding: 12px;
+            margin: 6px 0;
+            border: none;
+            background: #755dca;
+            color: black;
+            cursor: pointer;
+            text-align: left;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .sidebar button:hover {
+            background: #2a165f;
+            color: white;
+        }
+
+        .main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .section {
+            display: none;
+            background: linear-gradient(135deg, #baa9c5, #88d3ce);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #444;
+        }
+
+        button.action {
+            padding: 8px 15px;
+            background: #755dca;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button.action:hover {
+            background: #2a165f;
+            color: white;
+        }
+
+        h3 {
+            margin-bottom: 10px;
+        }
+
+        li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="sidebar">
+        <h2>EduVillage</h2>
+        <button id="btnProfile">Profile</button>
+        <button id="btnCourses">Manage Courses</button>
+        <button id="btnAssignment">Create Assignment</button>
+        <button id="btnNotes">Upload Notes</button>
+        <button id="btnStudents">View Students</button>
+        <button id="btnLeaderboard">Leaderboard</button>
+        <button id="btnLogout">Logout</button>
+    </div>
+
+    <div class="main">
+        <!-- PROFILE -->
+        <div id="profile" class="section active">
+            <h3>Teacher Profile</h3>
+            <p><b>Name:</b> <span id="teacherName"></span></p>
+            <p><b>Email:</b> <span id="teacherEmail"></span></p>
+        </div>
+
+        <!-- COURSES -->
+        <div id="courses" class="section">
+            <h3>Manage Courses</h3>
+            <input type="text" id="courseName" placeholder="Course Name">
+            <button id="addCourseBtn" class="action">Add Course</button>
+        </div>
+
+        <!-- ASSIGNMENTS -->
+        <div id="assignment" class="section">
+            <h3>Create Assignment</h3>
+            <input type="text" id="assignmentTitle" placeholder="Assignment Title">
+            <textarea id="assignmentDesc" placeholder="Assignment Description"></textarea>
+            <select id="assignmentCourse">
+                <option value="">Select Course</option>
+            </select>
+            <button id="createAssignmentBtn" class="action">Create Assignment</button>
+        </div>
+
+        <!-- NOTES -->
+        <div id="notes" class="section">
+            <h3>Upload Notes</h3>
+            <select id="notesCourse"></select>
+            <textarea id="notesText" rows="4" placeholder="Enter notes content"></textarea>
+            <button id="saveNotesBtn" class="action">Save Notes</button>
+        </div>
+
+        <!-- STUDENTS -->
+        <div id="students" class="section">
+            <h3>Students List</h3>
+            <select id="studentCourseSelect"></select>
+            <ul id="studentList"></ul>
+        </div>
+
+        <!-- LEADERBOARD -->
+        <div id="leaderboard" class="section">
+            <h3>Course Leaderboard</h3>
+            <ul id="leaderboardList"></ul>
+        </div>
+    </div>
+
+    <script>
+        // ---------- SECTION SWITCH ----------
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        // ---------- PROFILE ----------
+        document.getElementById("teacherName").innerText = localStorage.getItem("teacherName") || "Teacher";
+        document.getElementById("teacherEmail").innerText = localStorage.getItem("teacherEmail") || "Not Available";
+
+        // ---------- FETCH COURSES ----------
+        async function fetchTeacherCourses() {
+            const teacherId = localStorage.getItem("teacherId");
+            if (!teacherId) return [];
+
+            try {
+                const res = await fetch(`/courses/teacher/${teacherId}`);
+                const data = await res.json();
+                return data.success && Array.isArray(data.courses) ? data.courses : [];
+            } catch (err) {
+                console.error(err);
+                return [];
+            }
+        }
+
+        async function populateDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.innerHTML = '<option value="">Select Course</option>';
+            const courses = await fetchTeacherCourses();
+            courses.forEach(c => {
+                const option = document.createElement("option");
+                option.value = c.id;
+                option.textContent = c.course_name;
+                dropdown.appendChild(option);
+            });
+        }
+
+        // ---------- ADD COURSE ----------
+        async function addCourse() {
+            const name = document.getElementById("courseName").value.trim();
+            const teacherId = localStorage.getItem("teacherId");
+            if (!name) return alert("Enter course name");
+
+            try {
+                const res = await fetch("/course/add", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ course_name: name, teacher_id: teacherId })
+                });
+                const data = await res.json();
+                alert(data.message || (data.success ? "Course added" : "Error"));
+                if (data.success) {
+                    document.getElementById("courseName").value = "";
+                    await populateDropdown("assignmentCourse");
+                    await populateDropdown("notesCourse");
+                    await populateDropdown("studentCourseSelect");
+                }
+            } catch (err) { console.error(err); alert("Error adding course"); }
+        }
+
+        // ---------- CREATE ASSIGNMENT ----------
+        async function createAssignment() {
+            const title = document.getElementById("assignmentTitle").value.trim();
+            const desc = document.getElementById("assignmentDesc").value.trim();
+            const courseId = document.getElementById("assignmentCourse").value;
+            const teacherId = localStorage.getItem("teacherId");
+            if (!title || !courseId) return alert("Title and course are required");
+
+            try {
+                const res = await fetch("/assignment/add", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ title, description: desc, course_id: courseId, teacher_id: teacherId })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    alert("Assignment created successfully!");
+                    document.getElementById("assignmentTitle").value = "";
+                    document.getElementById("assignmentDesc").value = "";
+                } else alert("Error: " + (data.message || "Could not create assignment"));
+            } catch (err) { console.error(err); alert("Server error"); }
+        }
+
+        // ---------- SAVE NOTES ----------
+        async function saveNotes() {
+            const content = document.getElementById("notesText").value.trim();
+            const courseId = document.getElementById("notesCourse").value;
+            const teacherId = localStorage.getItem("teacherId");
+            if (!courseId || !content) return alert("Fill all fields");
+
+            try {
+                const res = await fetch("/notes", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ teacher_id: teacherId, course_id: courseId, content })
+                });
+                const data = await res.json();
+                alert(data.message);
+                if (data.success) document.getElementById("notesText").value = "";
+            } catch (err) { console.error(err); alert("Error saving notes"); }
+        }
+
+        // ---------- LOAD STUDENT COURSES DROPDOWN ----------
+        async function loadStudentCourseDropdown() {
+            const teacherId = localStorage.getItem("teacherId");
+            const dropdown = document.getElementById("studentCourseSelect");
+
+            dropdown.innerHTML = '<option value="">Select Course</option>';
+
+            if (!teacherId) return;
+
+            try {
+                const res = await fetch(`/courses/teacher/${teacherId}`);
+                const data = await res.json();
+
+                if (data.success && Array.isArray(data.courses)) {
+                    data.courses.forEach(course => {
+                        const option = document.createElement("option");
+                        option.value = course.id;
+                        option.textContent = course.course_name;
+                        dropdown.appendChild(option);
+                    });
+                }
+            } catch (err) {
+                console.error("Error loading courses for students dropdown:", err);
+            }
+        }
+
+        // ---------- LOAD STUDENTS BY COURSE ----------
+        async function loadStudentsByCourse() {
+            const courseId = document.getElementById("studentCourseSelect").value;
+            const ul = document.getElementById("studentList");
+
+            ul.innerHTML = "<li>Loading students...</li>";
+
+            if (!courseId) {
+                ul.innerHTML = "<li>Select a course</li>";
+                return;
+            }
+
+            try {
+                const res = await fetch(`/teacher/students/${courseId}`);
+                const data = await res.json();
+
+                ul.innerHTML = "";
+
+                if (data.success && Array.isArray(data.students) && data.students.length > 0) {
+                    data.students.forEach(s => {
+                        const li = document.createElement("li");
+                        li.textContent = `${s.name} – ${s.email}`;
+                        ul.appendChild(li);
+                    });
+                } else {
+                    ul.innerHTML = "<li>No students enrolled</li>";
+                }
+            } catch (err) {
+                console.error(err);
+                ul.innerHTML = "<li>Error loading students</li>";
+            }
+        }
+
+        // ---------- OPEN STUDENTS SECTION ----------
+        function openStudents() {
+            showSection('students');
+            loadStudentCourseDropdown(); // ✅ Populate dropdown
+        }
+
+        // ---------- EVENT LISTENER FOR DROPDOWN ----------
+        document.getElementById("studentCourseSelect")?.addEventListener("change", loadStudentsByCourse);
+
+
+        // ---------- LEADERBOARD ----------
+        async function openLeaderboard() {
+            showSection('leaderboard');
+            const ul = document.getElementById("leaderboardList");
+            ul.innerHTML = "<li>Loading leaderboard...</li>";
+
+            const courses = await fetchTeacherCourses();
+            if (courses.length === 0) { ul.innerHTML = "<li>No course found</li>"; return; }
+            const courseId = courses[0].id;
+
+            try {
+                const res = await fetch(`/leaderboard/${courseId}`);
+                const data = await res.json();
+                ul.innerHTML = "";
+                if (data.success && data.leaderboard.length > 0) {
+                    data.leaderboard.forEach((s, i) => {
+                        let trophy = i === 0 ? "🥇" : i === 1 ? "🥈" : i === 2 ? "🥉" : "";
+                        const li = document.createElement("li");
+                        li.innerHTML = `${trophy}<b>#${i + 1}</b> ${s.name} (${s.email}) — <b>${s.marks} Marks</b>`;
+                        ul.appendChild(li);
+                    });
+                } else ul.innerHTML = "<li>No scores available</li>";
+            } catch (err) { console.error(err); ul.innerHTML = "<li>Error loading leaderboard</li>"; }
+        }
+
+        // ---------- LOGOUT ----------
+        function logout() { localStorage.clear(); window.location.href = "login_register.html"; }
+
+        // ---------- INIT ----------
+        window.addEventListener("DOMContentLoaded", async () => {
+            // Section buttons
+            document.getElementById("btnProfile").addEventListener("click", () => showSection('profile'));
+            document.getElementById("btnCourses").addEventListener("click", () => showSection('courses'));
+            document.getElementById("btnAssignment").addEventListener("click", () => showSection('assignment'));
+            document.getElementById("btnNotes").addEventListener("click", () => showSection('notes'));
+            document.getElementById("btnStudents").addEventListener("click", openStudents);
+            document.getElementById("btnLeaderboard").addEventListener("click", openLeaderboard);
+            document.getElementById("btnLogout").addEventListener("click", logout);
+
+            // Action buttons
+            document.getElementById("addCourseBtn").addEventListener("click", addCourse);
+            document.getElementById("createAssignmentBtn").addEventListener("click", createAssignment);
+            document.getElementById("saveNotesBtn").addEventListener("click", saveNotes);
+
+            // Populate dropdowns
+            await populateDropdown("assignmentCourse");
+            await populateDropdown("notesCourse");
+            await populateDropdown("studentCourseSelect");
+        });
+    </script>
+</body>
+
+</html>
